@@ -54,7 +54,7 @@
         "robthree/twofactorauth": "^3.0.2",
         "lbuchs/webauthn": "^2.2",
         "bacon/bacon-qr-code": "^3.0.1",
-        "utopia-php/messaging": "^0.20.0",
+        "utopia-php/messaging": "^0.22.0",
         "filips123/monolog-phpmailer": "^2.0",
         "mpociot/vat-calculator": "^3.22.0",
         "guzzlehttp/guzzle": "^7.9.3",
