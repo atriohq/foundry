@@ -34,6 +34,7 @@ Follow the instructions for your operating system.
 ### Ubuntu 22.04 / 24.04
 
 ```bash
+ufw disable
 apt update
 apt install -y curl software-properties-common ufw
 
@@ -45,6 +46,7 @@ apt install -y bzip2 composer git net-tools php8.5 php8.5-bcmath php8.5-bz2 php8
 ### Debian 12 / 13 (needs testing)
 
 ```bash
+ufw disable
 apt update
 apt install -y ca-certificates curl gnupg lsb-release ufw
 
