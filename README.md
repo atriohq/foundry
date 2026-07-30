@@ -38,13 +38,11 @@ apt update
 apt install -y curl software-properties-common ufw
 
 add-apt-repository -y ppa:ondrej/php
-add-apt-repository -y ppa:ondrej/nginx
-apt update
 
-apt install -y bzip2 composer git net-tools php8.3 php8.3-bcmath php8.3-bz2 php8.3-cli php8.3-common php8.3-curl php8.3-ds php8.3-fpm php8.3-gd php8.3-gmp php8.3-igbinary php8.3-imap php8.3-intl php8.3-mbstring php8.3-opcache php8.3-readline php8.3-redis php8.3-soap php8.3-swoole php8.3-uuid php8.3-xml php8.3-zip unzip wget whois
+apt install -y bzip2 composer git net-tools php8.5 php8.5-bcmath php8.5-bz2 php8.5-cli php8.5-common php8.5-curl php8.5-ds php8.5-fpm php8.5-gd php8.5-gmp php8.5-igbinary php8.5-imap php8.5-intl php8.5-mbstring php8.5-readline php8.5-redis php8.5-soap php8.5-swoole php8.5-uuid php8.5-xml php8.5-zip unzip wget whois
 ```
 
-### Debian 12 / 13
+### Debian 12 / 13 (needs testing)
 
 ```bash
 apt update
@@ -57,16 +55,9 @@ curl -fsSL https://packages.sury.org/php/apt.gpg \
 echo "deb [signed-by=/usr/share/keyrings/sury-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" \
  > /etc/apt/sources.list.d/sury-php.list
 
-# Nginx (official repo)
-curl -fsSL https://nginx.org/keys/nginx_signing.key \
- | gpg --dearmor -o /usr/share/keyrings/nginx.gpg
-
-echo "deb [signed-by=/usr/share/keyrings/nginx.gpg] http://nginx.org/packages/mainline/debian $(lsb_release -sc) nginx" \
- > /etc/apt/sources.list.d/nginx.list
-
 apt update
 
-apt install -y bzip2 composer git net-tools php8.3 php8.3-bcmath php8.3-bz2 php8.3-cli php8.3-common php8.3-curl php8.3-ds php8.3-fpm php8.3-gd php8.3-gmp php8.3-igbinary php8.3-imap php8.3-intl php8.3-mbstring php8.3-opcache php8.3-readline php8.3-redis php8.3-soap php8.3-swoole php8.3-uuid php8.3-xml php8.3-zip unzip wget whois
+apt install -y bzip2 composer git net-tools php8.5 php8.5-bcmath php8.5-bz2 php8.5-cli php8.5-common php8.5-curl php8.5-ds php8.5-fpm php8.5-gd php8.5-gmp php8.5-igbinary php8.5-imap php8.5-intl php8.5-mbstring php8.5-opcache php8.5-readline php8.5-redis php8.5-soap php8.5-swoole php8.5-uuid php8.5-xml php8.5-zip unzip wget whois
 ```
 
 #### Configure PHP Settings:
@@ -74,7 +65,7 @@ apt install -y bzip2 composer git net-tools php8.3 php8.3-bcmath php8.3-bz2 php8
 1. Open the PHP-FPM configuration file:
 
 ```bash
-nano /etc/php/8.3/fpm/php.ini
+nano /etc/php/8.5/fpm/php.ini
 ```
 
 Add or uncomment the following session security settings:
@@ -83,27 +74,14 @@ Add or uncomment the following session security settings:
 session.cookie_secure = 1
 session.cookie_httponly = 1
 session.cookie_samesite = "Strict"
-```
-
-2. Open the OPCache configuration file:
-
-```bash
-nano /etc/php/8.3/mods-available/opcache.ini
-```
-
-Verify or add the following OPCache and JIT settings:
-
-```ini
 opcache.enable=1
 opcache.enable_cli=1
-opcache.jit=1255
-opcache.jit_buffer_size=100M
 ```
 
-3. Restart PHP-FPM to apply the changes:
+2. Restart PHP-FPM to apply the changes:
 
 ```bash
-systemctl restart php8.3-fpm
+systemctl restart php8.5-fpm
 ```
 
 ### 2. Install and Configure Caddy and Adminer:
@@ -124,10 +102,9 @@ apt install -y caddy
 FOUNDRY.DOMAIN {
     bind YOUR_IPV4_ADDRESS YOUR_IPV6_ADDRESS
     root * /var/www/foundry/public
-    php_fastcgi unix//run/php/php8.3-fpm.sock
+    php_fastcgi unix//run/php/php8.5-fpm.sock
     encode zstd gzip
     file_server
-    tls your-email@example.com
     header -Server
     log {
         output file /var/log/foundry/caddy.log
@@ -135,7 +112,7 @@ FOUNDRY.DOMAIN {
     # Adminer Configuration
     route /adminer.php* {
         root * /usr/share/adminer
-        php_fastcgi unix//run/php/php8.3-fpm.sock
+        php_fastcgi unix//run/php/php8.5-fpm.sock
     }
     header * {
         Referrer-Policy "same-origin"
@@ -143,9 +120,9 @@ FOUNDRY.DOMAIN {
         X-Content-Type-Options nosniff
         X-Frame-Options DENY
         X-XSS-Protection "1; mode=block"
-        Content-Security-Policy: default-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; img-src https:; font-src 'self'; style-src 'self' 'unsafe-inline' https://rsms.me; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/; form-action 'self'; worker-src 'none'; frame-src 'none';
+        Content-Security-Policy "default-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; img-src https:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; form-action 'self'; worker-src 'none'; frame-src 'none';"
         Feature-Policy "accelerometer 'none'; autoplay 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'self'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture 'self'; usb 'none';"
-        Permissions-Policy: accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), usb=();
+        Permissions-Policy "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), usb=();"
     }
 }
 ```
@@ -225,7 +202,7 @@ Signed-By: /etc/apt/keyrings/mariadb-keyring.pgp
 
 ```bash
 apt update
-apt install -y mariadb-client mariadb-server php8.3-mysql
+apt install -y mariadb-client mariadb-server php8.5-mysql
 mysql_secure_installation
 ```
 
@@ -252,7 +229,7 @@ Replace `foundry` with your desired username and `RANDOM_STRONG_PASSWORD` with a
 
 ```bash
 cd /var/www
-composer create-project argora/foundry your-project-name
+composer create-project argora/foundry foundry
 ```
 
 ### 6. Setup Foundry:
@@ -261,7 +238,7 @@ composer create-project argora/foundry your-project-name
 cd /var/www/foundry
 cp env-sample .env
 chmod -R 775 logs cache
-chown -R www-data:www-data logs cache
+chown -R caddy:caddy logs cache
 ```
 
 Configure your `.env` with database and app settings, and set your admin credentials in `bin/create-admin-user.php`.
@@ -273,7 +250,7 @@ php bin/install-db.php
 php bin/create-admin-user.php
 ```
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 Argora Foundry is based on [hezecom/slim-starter](https://github.com/omotsuebe/slim-starter), an excellent Slim Framework 4 starter project by [Hezekiah Omotsuebe](https://github.com/omotsuebe).  
 We’ve extended and restructured it for SaaS platforms, admin panels, and modern boilerplate needs.
