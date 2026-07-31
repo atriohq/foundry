@@ -40,7 +40,7 @@ apt install -y curl software-properties-common ufw
 
 add-apt-repository -y ppa:ondrej/php
 
-apt install -y bzip2 composer git net-tools php8.5 php8.5-bcmath php8.5-bz2 php8.5-cli php8.5-common php8.5-curl php8.5-ds php8.5-fpm php8.5-gd php8.5-gmp php8.5-igbinary php8.5-imap php8.5-intl php8.5-mbstring php8.5-readline php8.5-redis php8.5-soap php8.5-swoole php8.5-uuid php8.5-xml php8.5-zip unzip wget whois
+apt install -y bzip2 git net-tools php8.5 php8.5-bcmath php8.5-bz2 php8.5-cli php8.5-common php8.5-curl php8.5-ds php8.5-fpm php8.5-gd php8.5-gmp php8.5-igbinary php8.5-imap php8.5-intl php8.5-mbstring php8.5-readline php8.5-redis php8.5-soap php8.5-swoole php8.5-uuid php8.5-xml php8.5-zip unzip wget whois
 ```
 
 ### Debian 12 / 13 (needs testing)
@@ -59,7 +59,7 @@ echo "deb [signed-by=/usr/share/keyrings/sury-php.gpg] https://packages.sury.org
 
 apt update
 
-apt install -y bzip2 composer git net-tools php8.5 php8.5-bcmath php8.5-bz2 php8.5-cli php8.5-common php8.5-curl php8.5-ds php8.5-fpm php8.5-gd php8.5-gmp php8.5-igbinary php8.5-imap php8.5-intl php8.5-mbstring php8.5-opcache php8.5-readline php8.5-redis php8.5-soap php8.5-swoole php8.5-uuid php8.5-xml php8.5-zip unzip wget whois
+apt install -y bzip2 git net-tools php8.5 php8.5-bcmath php8.5-bz2 php8.5-cli php8.5-common php8.5-curl php8.5-ds php8.5-fpm php8.5-gd php8.5-gmp php8.5-igbinary php8.5-imap php8.5-intl php8.5-mbstring php8.5-opcache php8.5-readline php8.5-redis php8.5-soap php8.5-swoole php8.5-uuid php8.5-xml php8.5-zip unzip wget whois
 ```
 
 #### Configure PHP Settings:
@@ -86,11 +86,15 @@ opcache.enable_cli=1
 systemctl restart php8.5-fpm
 ```
 
-### 2. Install and Configure Caddy and Adminer:
+### 2. Install and Configure Composer, Caddy and Adminer:
 
 1. Execute the following commands:
 
 ```bash
+curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
+php8.5 /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+rm /tmp/composer-setup.php
+
 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' -o caddy-stable.gpg.key
 gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg caddy-stable.gpg.key
 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
@@ -122,7 +126,7 @@ FOUNDRY.DOMAIN {
         X-Content-Type-Options nosniff
         X-Frame-Options DENY
         X-XSS-Protection "1; mode=block"
-        Content-Security-Policy "default-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; img-src 'self' https: data:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; form-action 'self'; worker-src 'none'; frame-src 'none';"
+        Content-Security-Policy "default-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; connect-src 'self'; img-src https: data:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; form-action 'self'; worker-src 'none'; frame-src 'none';"
         Feature-Policy "accelerometer 'none'; autoplay 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'self'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture 'self'; usb 'none';"
         Permissions-Policy "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), usb=();"
     }
