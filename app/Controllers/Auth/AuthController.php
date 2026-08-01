@@ -18,7 +18,7 @@ use App\Controllers\Controller;
 use Respect\Validation\Validator as v;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Pinga\Session;
+use Pinga\Session\Session;
 
 class AuthController extends Controller
 {
@@ -422,7 +422,7 @@ class AuthController extends Controller
                     throw $e;
                 }
 
-                session_regenerate_id(true);
+                Session::regenerate(true);
                 $_SESSION['auth_logged_in'] = true;
                 $_SESSION['auth_user_id'] = $user['id'];
                 $_SESSION['auth_email'] = $user['email'];
