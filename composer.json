@@ -55,7 +55,7 @@
         "utopia-php/messaging": "^0.22.0",
         "filips123/monolog-phpmailer": "^2.0",
         "mpociot/vat-calculator": "^3.22.0",
-        "guzzlehttp/guzzle": "^7.9.3",
+        "guzzlehttp/guzzle": "^8.0.1",
         "league/iso3166": "^4.3.3",
         "stripe/stripe-php": "^20.0.0",
         "adyen/php-api-library": "^29.0",
